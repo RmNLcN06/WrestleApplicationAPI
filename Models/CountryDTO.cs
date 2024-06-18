@@ -5,7 +5,6 @@ namespace WrestleApplicationAPI.Models
 {
     public class CountryDTO
     {
-        [Key]
         public string IdCountry { get; set; }
 
         public string NameCountry { get; set; } = string.Empty;
