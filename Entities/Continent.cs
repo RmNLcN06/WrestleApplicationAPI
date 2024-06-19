@@ -5,6 +5,7 @@ namespace WrestleApplicationAPI.Entities
     public class Continent
     {
         [Key]
+        [Required]
         public int IdContinent { get; set; }
 
         [Required]

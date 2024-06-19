@@ -1,14 +1,25 @@
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using WrestleApplicationAPI;
 using WrestleApplicationAPI.Datas;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddDbContext<DataContext>(options =>
+builder.Services.AddSingleton<ContinentsDataStore>();
+/*builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("WrestleDbContextConnection"))
-);
-builder.Services.AddControllers();
+);*/
+
+
+builder.Services.AddControllers(options =>
+{
+    options.ReturnHttpNotAcceptable = true;
+}).AddXmlDataContractSerializerFormatters();
+
+builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
