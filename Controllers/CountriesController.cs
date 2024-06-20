@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using WrestleApplicationAPI.Datas;
+using WrestleApplicationAPI.Entities;
+
 //using WrestleApplicationAPI.Entities;
 using WrestleApplicationAPI.Models;
 
@@ -83,7 +85,7 @@ namespace WrestleApplicationAPI.Controllers
         }
 
         [HttpPut("{countryid}")]
-        public ActionResult ModificationCountry(int continentId, string countryid, CountryModificationDTO country)
+        public ActionResult ModificationCountry(int continentId, string countryId, CountryModificationDTO country)
         {
             var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
@@ -93,7 +95,7 @@ namespace WrestleApplicationAPI.Controllers
             }
 
             // Find country
-            var countryFromStore = continent.Countries.FirstOrDefault(c => c.IdCountry == countryid);
+            var countryFromStore = continent.Countries.FirstOrDefault(c => c.IdCountry == countryId);
             if (countryFromStore == null)
             { 
                 return NotFound("Country from store not found.");
@@ -107,7 +109,7 @@ namespace WrestleApplicationAPI.Controllers
         }
 
         [HttpPatch("{countryid}")]
-        public ActionResult PartialModificationCountry(int continentId, string countryid, JsonPatchDocument<CountryModificationDTO> patchDocument)
+        public ActionResult PartialModificationCountry(int continentId, string countryId, JsonPatchDocument<CountryModificationDTO> patchDocument)
         {
             var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
@@ -117,7 +119,7 @@ namespace WrestleApplicationAPI.Controllers
             }
 
             // Find country
-            var countryFromStore = continent.Countries.FirstOrDefault(c => c.IdCountry == countryid);
+            var countryFromStore = continent.Countries.FirstOrDefault(c => c.IdCountry == countryId);
             if (countryFromStore == null)
             {
                 return NotFound("Country from store not found.");
@@ -146,6 +148,28 @@ namespace WrestleApplicationAPI.Controllers
             countryFromStore.NameCountry = countryToPatch.NameCountry;
             countryFromStore.UrlFlagCountry = countryToPatch.UrlFlagCountry;
 
+            return NoContent();
+        }
+
+        [HttpDelete("{countryid}")]
+        public ActionResult DeleteCountry(int continentId, string countryId)
+        {
+            var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+
+            if (continent == null)
+            {
+                return NotFound("Wrong Continent.");
+            }
+
+            // Find country
+            var countryFromStore = continent.Countries.FirstOrDefault(c => c.IdCountry == countryId);
+
+            if (countryFromStore == null)
+            {
+                return NotFound("Country from store not found.");
+            }
+
+            continent.Countries.Remove(countryFromStore);
             return NoContent();
         }
     }
