@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
@@ -54,7 +55,7 @@ namespace WrestleApplicationAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CountryDTO> CreateCountry(int continentId, CountryDTO country) 
+        public ActionResult<CountryDTO> CreateCountry(int continentId, CountryCreationDTO country) 
         {
             var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
@@ -79,6 +80,73 @@ namespace WrestleApplicationAPI.Controllers
                     countryId = finalCountry.IdCountry,
                 },
                 finalCountry);
+        }
+
+        [HttpPut("{countryid}")]
+        public ActionResult ModificationCountry(int continentId, string countryid, CountryModificationDTO country)
+        {
+            var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+
+            if (continent == null)
+            {
+                return NotFound("Wrong Continent.");
+            }
+
+            // Find country
+            var countryFromStore = continent.Countries.FirstOrDefault(c => c.IdCountry == countryid);
+            if (countryFromStore == null)
+            { 
+                return NotFound("Country from store not found.");
+            }
+
+            countryFromStore.IdCountry = country.IdCountry;
+            countryFromStore.NameCountry = country.NameCountry;
+            countryFromStore.UrlFlagCountry = country.UrlFlagCountry;
+
+            return NoContent();
+        }
+
+        [HttpPatch("{countryid}")]
+        public ActionResult PartialModificationCountry(int continentId, string countryid, JsonPatchDocument<CountryModificationDTO> patchDocument)
+        {
+            var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+
+            if (continent == null)
+            {
+                return NotFound("Wrong Continent.");
+            }
+
+            // Find country
+            var countryFromStore = continent.Countries.FirstOrDefault(c => c.IdCountry == countryid);
+            if (countryFromStore == null)
+            {
+                return NotFound("Country from store not found.");
+            }
+
+            var countryToPatch = new CountryModificationDTO()
+            {
+                IdCountry = countryFromStore.IdCountry,
+                NameCountry = countryFromStore.NameCountry,
+                UrlFlagCountry = countryFromStore.UrlFlagCountry
+            };
+
+            patchDocument.ApplyTo(countryToPatch, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!TryValidateModel(countryToPatch))
+            {
+                return BadRequest(ModelState);
+            }
+
+            countryFromStore.IdCountry = countryToPatch.IdCountry;
+            countryFromStore.NameCountry = countryToPatch.NameCountry;
+            countryFromStore.UrlFlagCountry = countryToPatch.UrlFlagCountry;
+
+            return NoContent();
         }
     }
 }
