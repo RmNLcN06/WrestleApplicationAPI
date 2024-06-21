@@ -2,7 +2,7 @@
 using System.Reflection.Metadata;
 using WrestleApplicationAPI.Entities;
 
-namespace WrestleApplicationAPI.Datas
+namespace WrestleApplicationAPI.DbContexts
 {
     public class DataContext : DbContext
     {

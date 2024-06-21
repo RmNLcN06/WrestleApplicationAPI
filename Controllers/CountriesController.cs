@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
-using WrestleApplicationAPI.Datas;
+using WrestleApplicationAPI.DbContexts;
 using WrestleApplicationAPI.Entities;
 
 //using WrestleApplicationAPI.Entities;

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WrestleApplicationAPI;
-using WrestleApplicationAPI.Datas;
+using WrestleApplicationAPI.DbContexts;
 using WrestleApplicationAPI.Services;
 
 Log.Logger = new LoggerConfiguration()
@@ -18,9 +18,10 @@ builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddSingleton<ContinentsDataStore>();
-/*builder.Services.AddDbContext<DataContext>(options =>
+
+builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("WrestleDbContextConnection"))
-);*/
+);
 
 
 builder.Services.AddControllers(options =>

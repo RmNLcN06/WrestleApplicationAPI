@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WrestleApplicationAPI.Datas;
+using WrestleApplicationAPI.DbContexts;
 using WrestleApplicationAPI.Entities;
 using WrestleApplicationAPI.Models;
 
