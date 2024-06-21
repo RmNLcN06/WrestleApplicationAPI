@@ -11,17 +11,24 @@ namespace WrestleApplicationAPI.Controllers
     [ApiController]
     public class ContinentsController : ControllerBase
     {
+        private readonly ContinentsDataStore _continentsDataStore;
+
         /*private readonly DataContext _context;
 
         public ContinentsController(DataContext context)
         {
-            _context = context;
+        _context = context;
         }*/
+
+        public ContinentsController(ContinentsDataStore continentsDataStore) 
+        {
+            _continentsDataStore = continentsDataStore ?? throw new ArgumentNullException(nameof(continentsDataStore));
+        }
 
         [HttpGet]
         public ActionResult<IEnumerable<ContinentDTO>> GetContinents()
         {
-            var continents = ContinentsDataStore.Current.Continents.ToList();
+            var continents = _continentsDataStore.Continents.ToList();
             return Ok(continents);
         }
 
@@ -33,7 +40,7 @@ namespace WrestleApplicationAPI.Controllers
                 return BadRequest("Wrong ID.");
             }
 
-            var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(c => c.IdContinent == id);
+            var continent = _continentsDataStore.Continents.FirstOrDefault(c => c.IdContinent == id);
             if (continent == null)
             {
                 return NotFound("Wrong Continent.");

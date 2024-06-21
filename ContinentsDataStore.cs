@@ -7,7 +7,7 @@ namespace WrestleApplicationAPI
     public class ContinentsDataStore
     {
         public List<ContinentDTO> Continents { get; set; }
-        public static ContinentsDataStore Current { get; } = new ContinentsDataStore();
+        // public static ContinentsDataStore Current { get; } = new ContinentsDataStore();
 
         public ContinentsDataStore()
         {

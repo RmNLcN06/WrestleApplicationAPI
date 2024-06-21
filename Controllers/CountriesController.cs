@@ -24,12 +24,14 @@ namespace WrestleApplicationAPI.Controllers
         }*/
 
         private readonly ILogger<CountriesController> _logger;
-        private readonly LocalMailService _mailService;
+        private readonly IMailService _mailService;
+        private readonly ContinentsDataStore _continentsDataStore;
 
-        public CountriesController(ILogger<CountriesController> logger, LocalMailService mailService)
+        public CountriesController(ILogger<CountriesController> logger, IMailService mailService, ContinentsDataStore continentsDataStore)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
+            _continentsDataStore = continentsDataStore ?? throw new ArgumentNullException(nameof(continentsDataStore));
         }
 
         [HttpGet]
@@ -37,7 +39,7 @@ namespace WrestleApplicationAPI.Controllers
         {
             try 
             {
-                var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+                var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
                 if (continent == null)
                 {
@@ -59,7 +61,7 @@ namespace WrestleApplicationAPI.Controllers
         [HttpGet("{countryid}", Name = "GetCountry")]
         public ActionResult<CountryDTO> GetCountry(int continentId, string countryId)
         {
-            var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+            var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
             if (continent == null)
             {
@@ -80,7 +82,7 @@ namespace WrestleApplicationAPI.Controllers
         [HttpPost]
         public ActionResult<CountryDTO> CreateCountry(int continentId, CountryCreationDTO country) 
         {
-            var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+            var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
             if (continent == null)
             {
@@ -108,7 +110,7 @@ namespace WrestleApplicationAPI.Controllers
         [HttpPut("{countryid}")]
         public ActionResult ModificationCountry(int continentId, string countryId, CountryModificationDTO country)
         {
-            var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+            var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
             if (continent == null)
             {
@@ -132,7 +134,7 @@ namespace WrestleApplicationAPI.Controllers
         [HttpPatch("{countryid}")]
         public ActionResult PartialModificationCountry(int continentId, string countryId, JsonPatchDocument<CountryModificationDTO> patchDocument)
         {
-            var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+            var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
             if (continent == null)
             {
@@ -175,7 +177,7 @@ namespace WrestleApplicationAPI.Controllers
         [HttpDelete("{countryid}")]
         public ActionResult DeleteCountry(int continentId, string countryId)
         {
-            var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+            var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
             if (continent == null)
             {
