@@ -22,17 +22,35 @@ namespace WrestleApplicationAPI.Controllers
             _context = context;
         }*/
 
+        private readonly ILogger<CountriesController> _logger;
+
+        public CountriesController(ILogger<CountriesController> logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<CountryDTO>> GetCountries(int continentId)
-        { 
-            var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
-
-            if (continent == null)
+        {
+            try 
             {
-                return NotFound("Wrong Continent.");
+                var continent = ContinentsDataStore.Current.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+
+                if (continent == null)
+                {
+                    _logger.LogInformation($"Continent with id {continentId} wasn't found when accessing countries.");
+                    return NotFound();
+                }
+
+                return Ok(continent.Countries);
+            }
+            catch(Exception ex)
+            { 
+                _logger.LogCritical($"Exception while getting countries for continent with id {continentId}.", ex);
+                return StatusCode(500, "A problem happened while handling your request.");
             }
 
-            return Ok(continent.Countries);
+            
         }
 
         [HttpGet("{countryid}", Name = "GetCountry")]
