@@ -8,6 +8,7 @@ using WrestleApplicationAPI.Entities;
 
 //using WrestleApplicationAPI.Entities;
 using WrestleApplicationAPI.Models;
+using WrestleApplicationAPI.Services;
 
 namespace WrestleApplicationAPI.Controllers
 {
@@ -23,10 +24,12 @@ namespace WrestleApplicationAPI.Controllers
         }*/
 
         private readonly ILogger<CountriesController> _logger;
+        private readonly LocalMailService _mailService;
 
-        public CountriesController(ILogger<CountriesController> logger)
+        public CountriesController(ILogger<CountriesController> logger, LocalMailService mailService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
         }
 
         [HttpGet]
@@ -188,6 +191,8 @@ namespace WrestleApplicationAPI.Controllers
             }
 
             continent.Countries.Remove(countryFromStore);
+
+            _mailService.Send("Country deleted.", $"Country {countryFromStore.NameCountry} with id {countryFromStore.IdCountry} was deleted.");
             return NoContent();
         }
     }
