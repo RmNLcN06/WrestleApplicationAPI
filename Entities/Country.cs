@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WrestleApplicationAPI.Entities
 {
-    public class Country
+    public class Country(string nameCountry)
     {
         [Key]
         [Required]
@@ -12,7 +12,7 @@ namespace WrestleApplicationAPI.Entities
 
         [Required]
         [MaxLength(170)]
-        public string NameCountry { get; set; }
+        public string NameCountry { get; set; } = nameCountry;
 
         [Required]
         [MaxLength(255)]
