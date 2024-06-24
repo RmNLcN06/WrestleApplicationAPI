@@ -16,22 +16,17 @@ namespace WrestleApplicationAPI.Controllers
     [ApiController]
     public class CountriesController : ControllerBase
     {
-        /*private readonly DataContext _context;
-
-        public CountriesController(DataContext context)
-        {
-            _context = context;
-        }*/
-
+        private readonly DataContext _context;
         private readonly ILogger<CountriesController> _logger;
         private readonly IMailService _mailService;
         private readonly ContinentsDataStore _continentsDataStore;
 
-        public CountriesController(ILogger<CountriesController> logger, IMailService mailService, ContinentsDataStore continentsDataStore)
+        public CountriesController(ILogger<CountriesController> logger, IMailService mailService, ContinentsDataStore continentsDataStore, DataContext context)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
             _continentsDataStore = continentsDataStore ?? throw new ArgumentNullException(nameof(continentsDataStore));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         [HttpGet]

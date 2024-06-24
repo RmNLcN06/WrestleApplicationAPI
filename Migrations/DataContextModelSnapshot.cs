@@ -36,7 +36,7 @@ namespace WrestleApplicationAPI.Migrations
 
                     b.HasKey("IdContinent");
 
-                    b.ToTable("Continents");
+                    b.ToTable("Continents", (string)null);
                 });
 
             modelBuilder.Entity("WrestleApplicationAPI.Entities.Country", b =>
@@ -62,7 +62,7 @@ namespace WrestleApplicationAPI.Migrations
 
                     b.HasIndex("ContinentId");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("WrestleApplicationAPI.Entities.Country", b =>
