@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WrestleApplicationAPI.DbContexts;
 using WrestleApplicationAPI.Entities;
+using WrestleApplicationAPI.Interfaces;
 using WrestleApplicationAPI.Models;
 
 namespace WrestleApplicationAPI.Controllers
@@ -11,31 +12,37 @@ namespace WrestleApplicationAPI.Controllers
     [ApiController]
     public class ContinentsController : ControllerBase
     {
-        private readonly ContinentsDataStore _continentsDataStore;
+        private readonly IContinentRepository _continentRepository;
 
-        /*private readonly DataContext _context;
-
-        public ContinentsController(DataContext context)
+        public ContinentsController(IContinentRepository continentRepository)
         {
-        _context = context;
-        }*/
-
-        public ContinentsController(ContinentsDataStore continentsDataStore) 
-        {
-            _continentsDataStore = continentsDataStore ?? throw new ArgumentNullException(nameof(continentsDataStore));
+            _continentRepository = continentRepository ?? throw new ArgumentNullException(nameof(continentRepository));
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ContinentDTO>> GetContinents()
+        public async Task<ActionResult<IEnumerable<ContinentWithoutCountriesDTO>>> GetContinents()
         {
-            var continents = _continentsDataStore.Continents.ToList();
-            return Ok(continents);
+            var continentEntities = await _continentRepository.GetContinentsAsync();
+
+            var results = new List <ContinentWithoutCountriesDTO>();
+            foreach (var continentEntity in continentEntities) 
+            {
+                results.Add(new ContinentWithoutCountriesDTO
+                {
+                    IdContinent = continentEntity.IdContinent,
+                    NameContinent = continentEntity.NameContinent
+                });
+            }
+
+            return Ok(results);
+            /*var continents = _continentsDataStore.Continents.ToList();
+            return Ok(continents);*/
         }
 
         [HttpGet("{id}")]
         public ActionResult<ContinentDTO> GetContinentById(int id)
         {
-            if (id <= 0)
+            /*if (id <= 0)
             {
                 return BadRequest("Wrong ID.");
             }
@@ -46,7 +53,8 @@ namespace WrestleApplicationAPI.Controllers
                 return NotFound("Wrong Continent.");
             }
             
-            return Ok(continent);
+            return Ok(continent);*/
+            return Ok();
         }
     }
 }
