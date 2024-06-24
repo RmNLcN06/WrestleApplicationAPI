@@ -27,6 +27,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 builder.Services.AddScoped<IContinentRepository, ContinentRepository>();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddControllers(options =>
 {
     options.ReturnHttpNotAcceptable = true;

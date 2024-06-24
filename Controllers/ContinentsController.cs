@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WrestleApplicationAPI.DbContexts;
@@ -13,18 +14,21 @@ namespace WrestleApplicationAPI.Controllers
     public class ContinentsController : ControllerBase
     {
         private readonly IContinentRepository _continentRepository;
+        private readonly IMapper _mapper;
 
-        public ContinentsController(IContinentRepository continentRepository)
+        public ContinentsController(IContinentRepository continentRepository, IMapper mapper)
         {
             _continentRepository = continentRepository ?? throw new ArgumentNullException(nameof(continentRepository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ContinentWithoutCountriesDTO>>> GetContinents()
         {
             var continentEntities = await _continentRepository.GetContinentsAsync();
+            return Ok(_mapper.Map<IEnumerable<ContinentWithoutCountriesDTO>>(continentEntities));
 
-            var results = new List <ContinentWithoutCountriesDTO>();
+            /*var results = new List <ContinentWithoutCountriesDTO>();
             foreach (var continentEntity in continentEntities) 
             {
                 results.Add(new ContinentWithoutCountriesDTO
@@ -34,7 +38,7 @@ namespace WrestleApplicationAPI.Controllers
                 });
             }
 
-            return Ok(results);
+            return Ok(results);*/
             /*var continents = _continentsDataStore.Continents.ToList();
             return Ok(continents);*/
         }
