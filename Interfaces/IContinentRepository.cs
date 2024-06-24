@@ -1,6 +1,6 @@
 ﻿using WrestleApplicationAPI.Entities;
 
-namespace WrestleApplicationAPI.Services
+namespace WrestleApplicationAPI.Interfaces
 {
     public interface IContinentRepository
     {
@@ -14,8 +14,9 @@ namespace WrestleApplicationAPI.Services
         /// Get a continent
         /// </summary>
         /// <param name="continentId">Continent ID</param>
+        /// <param name="includeCountries">Show country(ies) included in Continent</param>
         /// <returns></returns>
-        Task<Continent?> GetContinentAsync(int continentId);
+        Task<Continent?> GetContinentAsync(int continentId, bool includeCountries);
 
         /// <summary>
         /// Get a list of countries for a continent

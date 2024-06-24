@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WrestleApplicationAPI;
 using WrestleApplicationAPI.DbContexts;
+using WrestleApplicationAPI.Interfaces;
+using WrestleApplicationAPI.Repositories;
 using WrestleApplicationAPI.Services;
 
 Log.Logger = new LoggerConfiguration()
@@ -23,6 +25,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("WrestleDbContextConnection"))
 );
 
+builder.Services.AddScoped<IContinentRepository, ContinentRepository>();
 
 builder.Services.AddControllers(options =>
 {
