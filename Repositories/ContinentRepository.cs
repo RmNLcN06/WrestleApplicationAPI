@@ -39,7 +39,7 @@ namespace WrestleApplicationAPI.Repositories
             return await _context.Countries.Where(country => country.ContinentId == continentId).ToListAsync();
         }
 
-        public async Task<Country?> GetCountryForContinentAsync(int continentId, string countryId)
+        public async Task<Country?> GetCountryForContinentAsync(int continentId, int countryId)
         {
             return await _context.Countries.Where(country => country.ContinentId == continentId && country.IdCountry == countryId).FirstOrDefaultAsync();
         }

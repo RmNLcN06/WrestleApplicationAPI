@@ -5,9 +5,11 @@ namespace WrestleApplicationAPI.Models
 {
     public class CountryDTO
     {
-        public string IdCountry { get; set; }
+        public int IdCountry { get; set; }
 
-        public string NameCountry { get; set; } = string.Empty;
+        public string FullNameCountry { get; set; } = string.Empty;
+
+        public string ShortNameCountry { get; set; } = string.Empty;
 
         public string? UrlFlagCountry { get; set; }
 

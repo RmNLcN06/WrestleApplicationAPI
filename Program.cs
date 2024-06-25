@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 
 // Add services to the container.
-builder.Services.AddSingleton<ContinentsDataStore>();
+//builder.Services.AddSingleton<ContinentsDataStore>();
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("WrestleDbContextConnection"))
@@ -47,8 +47,6 @@ builder.Services.AddTransient<IMailService, LocalMailService>();
 #else
 builder.Services.AddTransient<IMailService, CloudMailService>();
 #endif
-
-builder.Services.AddSingleton<ContinentsDataStore>();
 
 var app = builder.Build();
 

@@ -43,29 +43,11 @@ namespace WrestleApplicationAPI.Controllers
             var countriesForContinent = await _continentRepository.GetCountriesForContinentAsync(continentId);
 
             return Ok(_mapper.Map<IEnumerable<CountryDTO>>(countriesForContinent));
-            /*try 
-            {
-                var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
-
-                if (continent == null)
-                {
-                    _logger.LogInformation($"Continent with id {continentId} wasn't found when accessing countries.");
-                    return NotFound();
-                }
-
-                return Ok(continent.Countries);
-            }
-            catch(Exception ex)
-            { 
-                _logger.LogCritical($"Exception while getting countries for continent with id {continentId}.", ex);
-                return StatusCode(500, "A problem happened while handling your request.");
-            }*/
-
-            
         }
 
-        [HttpGet("{countryid}", Name = "GetCountry")]
-        public async Task<ActionResult<CountryDTO>> GetCountry(int continentId, string countryId)
+
+        [HttpGet("{countryId}", Name = "GetCountry")]
+        public async Task<ActionResult<CountryDTO>> GetCountry(int continentId, int countryId)
         {
             if(!await _continentRepository.ContinentExistsAsync(continentId))
             {
@@ -80,23 +62,6 @@ namespace WrestleApplicationAPI.Controllers
             }
 
             return Ok(_mapper.Map<CountryDTO>(country));
-
-            /* var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
-
-            if (continent == null)
-            {
-                return NotFound("Wrong Continent.");
-            }
-
-
-            var country = continent.Countries.FirstOrDefault(c => c.IdCountry == countryId);
-
-            if (country == null)
-            {
-                return NotFound("Wrong Country.");
-            }
-
-            return Ok(country);*/
         }
 
         [HttpPost]
@@ -115,23 +80,7 @@ namespace WrestleApplicationAPI.Controllers
 
             var createdCountryToReturn = _mapper.Map<Models.CountryDTO>(finalCountry);
 
-            /*var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
-
-            if (continent == null)
-            {
-                return NotFound("Wrong Continent.");
-            }
-
-            var finalCountry = new CountryDTO()
-            {
-                IdCountry = country.IdCountry,
-                NameCountry = country.NameCountry,
-                UrlFlagCountry = country.UrlFlagCountry,
-            };
-
-            continent.Countries.Add(finalCountry);*/
-
-            return CreatedAtRoute("GetCountry", 
+            return CreatedAtRoute("GetCountry",
                 new
                 {
                     continentId = continentId,
@@ -140,31 +89,29 @@ namespace WrestleApplicationAPI.Controllers
                 createdCountryToReturn);
         }
 
-        /*[HttpPut("{countryid}")]
-        public ActionResult ModificationCountry(int continentId, string countryId, CountryModificationDTO country)
+        [HttpPut("{countryId}")]
+        public async Task<ActionResult> ModificationCountry(int continentId, int countryId, CountryModificationDTO country)
         {
-            var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
-
-            if (continent == null)
+            if(!await _continentRepository.ContinentExistsAsync(continentId))
             {
-                return NotFound("Wrong Continent.");
+                return NotFound("Continent not find"); 
             }
 
-            // Find country
-            var countryFromStore = continent.Countries.FirstOrDefault(c => c.IdCountry == countryId);
-            if (countryFromStore == null)
-            { 
-                return NotFound("Country from store not found.");
+            var countryEntity = await _continentRepository.GetCountryForContinentAsync(continentId, countryId);
+
+            if (countryEntity == null) 
+            {
+                return NotFound("Country not find");
             }
 
-            countryFromStore.IdCountry = country.IdCountry;
-            countryFromStore.NameCountry = country.NameCountry;
-            countryFromStore.UrlFlagCountry = country.UrlFlagCountry;
+            _mapper.Map(country, countryEntity);
+
+            await _continentRepository.SaveChangesAsync();
 
             return NoContent();
         }
 
-        [HttpPatch("{countryid}")]
+        /*[HttpPatch("{countryid}")]
         public ActionResult PartialModificationCountry(int continentId, string countryId, JsonPatchDocument<CountryModificationDTO> patchDocument)
         {
             var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);

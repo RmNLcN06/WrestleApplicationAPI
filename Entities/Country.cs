@@ -3,16 +3,19 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WrestleApplicationAPI.Entities
 {
-    public class Country(string nameCountry)
+    public class Country(string fullNameCountry)
     {
         [Key]
         [Required]
-        [MaxLength(3)]
-        public string IdCountry { get; set; }
+        public int IdCountry { get; set; }
 
         [Required]
         [MaxLength(170)]
-        public string NameCountry { get; set; } = nameCountry;
+        public string FullNameCountry { get; set; } = fullNameCountry;
+
+        [Required]
+        [MaxLength(3)]
+        public string ShortNameCountry { get; set; }
 
         [Required]
         [MaxLength(255)]
