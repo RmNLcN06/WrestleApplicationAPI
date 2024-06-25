@@ -99,10 +99,23 @@ namespace WrestleApplicationAPI.Controllers
             return Ok(country);*/
         }
 
-        /*[HttpPost]
-        public ActionResult<CountryDTO> CreateCountry(int continentId, CountryCreationDTO country) 
+        [HttpPost]
+        public async Task<ActionResult<CountryDTO>> CreateCountry(int continentId, CountryCreationDTO country) 
         {
-            var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+            if(!await _continentRepository.ContinentExistsAsync(continentId))
+            {
+                return NotFound(); 
+            }
+            
+            var finalCountry = _mapper.Map<Entities.Country>(country);
+
+            await _continentRepository.AddCountryForContinentAsync(continentId, finalCountry);
+
+            await _continentRepository.SaveChangesAsync();
+
+            var createdCountryToReturn = _mapper.Map<Models.CountryDTO>(finalCountry);
+
+            /*var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
             if (continent == null)
             {
@@ -116,18 +129,18 @@ namespace WrestleApplicationAPI.Controllers
                 UrlFlagCountry = country.UrlFlagCountry,
             };
 
-            continent.Countries.Add(finalCountry);
+            continent.Countries.Add(finalCountry);*/
 
             return CreatedAtRoute("GetCountry", 
                 new
                 {
                     continentId = continentId,
-                    countryId = finalCountry.IdCountry,
+                    countryId = createdCountryToReturn.IdCountry,
                 },
-                finalCountry);
+                createdCountryToReturn);
         }
 
-        [HttpPut("{countryid}")]
+        /*[HttpPut("{countryid}")]
         public ActionResult ModificationCountry(int continentId, string countryId, CountryModificationDTO country)
         {
             var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);

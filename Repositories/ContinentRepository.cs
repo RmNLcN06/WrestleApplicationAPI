@@ -43,5 +43,19 @@ namespace WrestleApplicationAPI.Repositories
         {
             return await _context.Countries.Where(country => country.ContinentId == continentId && country.IdCountry == countryId).FirstOrDefaultAsync();
         }
+
+        public async Task AddCountryForContinentAsync(int continentId, Country country)
+        {
+            var continent = await GetContinentAsync(continentId, false);
+            if (continent != null)
+            {
+                continent.Countries.Add(country);
+            }
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync() >= 0;
+        }
     }
 }

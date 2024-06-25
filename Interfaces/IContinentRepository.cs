@@ -39,5 +39,19 @@ namespace WrestleApplicationAPI.Interfaces
         /// <param name="countryId">Country ID</param>
         /// <returns></returns>
         Task<Country?> GetCountryForContinentAsync(int continentId, string countryId);
+
+        /// <summary>
+        /// Create country in specific continent
+        /// </summary>
+        /// <param name="continentId">Continent ID</param>
+        /// <param name="country">Country ID</param>
+        /// <returns></returns>
+        Task AddCountryForContinentAsync(int continentId, Country country);
+
+        /// <summary>
+        /// Save changes
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> SaveChangesAsync();
     }
 }
