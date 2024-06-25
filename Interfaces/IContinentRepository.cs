@@ -19,6 +19,13 @@ namespace WrestleApplicationAPI.Interfaces
         Task<Continent?> GetContinentAsync(int continentId, bool includeCountries);
 
         /// <summary>
+        /// Verify if continent exist
+        /// </summary>
+        /// <param name="continentId">Continent ID</param>
+        /// <returns></returns>
+        Task<bool> ContinentExistsAsync(int continentId);
+
+        /// <summary>
         /// Get a list of countries for a continent
         /// </summary>
         /// <param name="continentId">Continent ID</param>

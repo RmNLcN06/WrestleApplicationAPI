@@ -43,9 +43,20 @@ namespace WrestleApplicationAPI.Controllers
             return Ok(continents);*/
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<ContinentDTO> GetContinentById(int id)
+        [HttpGet("{continentId}")]
+        public async Task<IActionResult> GetContinent(int continentId, bool includeCountries = false)
         {
+            var continent = await _continentRepository.GetContinentAsync(continentId, includeCountries);
+
+            if (continent == null) 
+            { 
+                return NotFound();
+            }
+
+            if (includeCountries) 
+            { 
+                return Ok(_mapper.Map<ContinentDTO>(continent));
+            }
             /*if (id <= 0)
             {
                 return BadRequest("Wrong ID.");
@@ -58,7 +69,7 @@ namespace WrestleApplicationAPI.Controllers
             }
             
             return Ok(continent);*/
-            return Ok();
+            return Ok(_mapper.Map<ContinentWithoutCountriesDTO>(continent));
         }
     }
 }

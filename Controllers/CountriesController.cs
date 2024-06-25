@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using WrestleApplicationAPI.DbContexts;
 using WrestleApplicationAPI.Entities;
-
-//using WrestleApplicationAPI.Entities;
+using WrestleApplicationAPI.Interfaces;
 using WrestleApplicationAPI.Models;
 using WrestleApplicationAPI.Services;
+using AutoMapper;
 
 namespace WrestleApplicationAPI.Controllers
 {
@@ -16,23 +16,34 @@ namespace WrestleApplicationAPI.Controllers
     [ApiController]
     public class CountriesController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly ILogger<CountriesController> _logger;
         private readonly IMailService _mailService;
-        private readonly ContinentsDataStore _continentsDataStore;
+        private readonly IContinentRepository _continentRepository;
+        private readonly IMapper _mapper;
 
-        public CountriesController(ILogger<CountriesController> logger, IMailService mailService, ContinentsDataStore continentsDataStore, DataContext context)
+        public CountriesController(ILogger<CountriesController> logger,
+            IMailService mailService,
+            IContinentRepository continentRepository,
+            IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
-            _continentsDataStore = continentsDataStore ?? throw new ArgumentNullException(nameof(continentsDataStore));
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _continentRepository = continentRepository ?? throw new ArgumentNullException(nameof(continentRepository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CountryDTO>> GetCountries(int continentId)
+        public async Task<ActionResult<IEnumerable<CountryDTO>>> GetCountries(int continentId)
         {
-            try 
+            if(!await _continentRepository.ContinentExistsAsync(continentId))
+            {
+                _logger.LogInformation($"Continent with id {continentId} wasn't found when accessing countries.");
+                return NotFound();
+            }
+            var countriesForContinent = await _continentRepository.GetCountriesForContinentAsync(continentId);
+
+            return Ok(_mapper.Map<IEnumerable<CountryDTO>>(countriesForContinent));
+            /*try 
             {
                 var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
@@ -48,15 +59,29 @@ namespace WrestleApplicationAPI.Controllers
             { 
                 _logger.LogCritical($"Exception while getting countries for continent with id {continentId}.", ex);
                 return StatusCode(500, "A problem happened while handling your request.");
-            }
+            }*/
 
             
         }
 
         [HttpGet("{countryid}", Name = "GetCountry")]
-        public ActionResult<CountryDTO> GetCountry(int continentId, string countryId)
+        public async Task<ActionResult<CountryDTO>> GetCountry(int continentId, string countryId)
         {
-            var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
+            if(!await _continentRepository.ContinentExistsAsync(continentId))
+            {
+                return NotFound();
+            }
+
+            var country = await _continentRepository.GetCountryForContinentAsync(continentId, countryId);
+
+            if (country == null) 
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<CountryDTO>(country));
+
+            /* var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
             if (continent == null)
             {
@@ -71,10 +96,10 @@ namespace WrestleApplicationAPI.Controllers
                 return NotFound("Wrong Country.");
             }
 
-            return Ok(country);
+            return Ok(country);*/
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public ActionResult<CountryDTO> CreateCountry(int continentId, CountryCreationDTO country) 
         {
             var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
@@ -191,6 +216,6 @@ namespace WrestleApplicationAPI.Controllers
 
             _mailService.Send("Country deleted.", $"Country {countryFromStore.NameCountry} with id {countryFromStore.IdCountry} was deleted.");
             return NoContent();
-        }
+        }*/
     }
 }

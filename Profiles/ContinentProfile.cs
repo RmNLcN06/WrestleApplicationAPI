@@ -7,6 +7,7 @@ namespace WrestleApplicationAPI.Profiles
         public ContinentProfile() 
         { 
             CreateMap<Entities.Continent, Models.ContinentWithoutCountriesDTO>();
+            CreateMap<Entities.Continent, Models.ContinentDTO>();
         }
     }
 }
