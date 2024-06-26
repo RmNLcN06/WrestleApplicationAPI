@@ -53,6 +53,11 @@ namespace WrestleApplicationAPI.Repositories
             }
         }
 
+        public void DeleteCountryForContinent(Country country) 
+        { 
+            _context.Countries.Remove(country);
+        }
+
         public async Task<bool> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync() >= 0;

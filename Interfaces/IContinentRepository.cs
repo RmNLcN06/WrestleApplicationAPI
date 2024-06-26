@@ -44,9 +44,15 @@ namespace WrestleApplicationAPI.Interfaces
         /// Create country in specific continent
         /// </summary>
         /// <param name="continentId">Continent ID</param>
-        /// <param name="country">Country ID</param>
+        /// <param name="country">Country Entity</param>
         /// <returns></returns>
         Task AddCountryForContinentAsync(int continentId, Country country);
+
+        /// <summary>
+        /// Delete country in specific continent
+        /// </summary>
+        /// <param name="country">Country Entity</param>
+        void DeleteCountryForContinent(Country country);
 
         /// <summary>
         /// Save changes for continent ID

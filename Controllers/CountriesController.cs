@@ -146,28 +146,26 @@ namespace WrestleApplicationAPI.Controllers
             return NoContent();
         }
 
-        /*[HttpDelete("{countryid}")]
-        public ActionResult DeleteCountry(int continentId, string countryId)
+        [HttpDelete("{countryId}")]
+        public async Task<ActionResult> DeleteCountry(int continentId, int countryId)
         {
-            var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
-
-            if (continent == null)
+            if (!await _continentRepository.ContinentExistsAsync(continentId))
             {
-                return NotFound("Wrong Continent.");
+                return NotFound("Continent not find");
             }
 
-            // Find country
-            var countryFromStore = continent.Countries.FirstOrDefault(c => c.IdCountry == countryId);
-
-            if (countryFromStore == null)
+            var countryEntity = await _continentRepository.GetCountryForContinentAsync(continentId, countryId);
+            if (countryEntity == null)
             {
-                return NotFound("Country from store not found.");
+                return NotFound();
             }
 
-            continent.Countries.Remove(countryFromStore);
+            _continentRepository.DeleteCountryForContinent(countryEntity);
+            await _continentRepository.SaveChangesAsync();
 
-            _mailService.Send("Country deleted.", $"Country {countryFromStore.NameCountry} with id {countryFromStore.IdCountry} was deleted.");
+            _mailService.Send("Country deleted.", $"Country {countryEntity.FullNameCountry} with id {countryEntity.IdCountry} was deleted.");
+            
             return NoContent();
-        }*/
+        }
     }
 }
