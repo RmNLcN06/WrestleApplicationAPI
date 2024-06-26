@@ -10,7 +10,6 @@ namespace WrestleApplicationAPI.Profiles
             CreateMap<Models.CountryCreationDTO, Entities.Country>();
             CreateMap<Models.CountryModificationDTO, Entities.Country>();
             CreateMap<Entities.Country, Models.CountryModificationDTO>();
-
         }
     }
 }

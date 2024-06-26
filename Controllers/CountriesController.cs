@@ -111,29 +111,22 @@ namespace WrestleApplicationAPI.Controllers
             return NoContent();
         }
 
-        /*[HttpPatch("{countryid}")]
-        public ActionResult PartialModificationCountry(int continentId, string countryId, JsonPatchDocument<CountryModificationDTO> patchDocument)
+        [HttpPatch("{countryId}")]
+        public async Task<ActionResult> PartialModificationCountry(int continentId, int countryId, JsonPatchDocument<CountryModificationDTO> patchDocument)
         {
-            var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
 
-            if (continent == null)
+            if (!await _continentRepository.ContinentExistsAsync(continentId))
             {
-                return NotFound("Wrong Continent.");
+                return NotFound("Continent not find");
             }
 
-            // Find country
-            var countryFromStore = continent.Countries.FirstOrDefault(c => c.IdCountry == countryId);
-            if (countryFromStore == null)
-            {
-                return NotFound("Country from store not found.");
+            var countryEntity = await _continentRepository.GetCountryForContinentAsync(continentId, countryId);
+            if (countryEntity == null) 
+            { 
+                return NotFound();
             }
 
-            var countryToPatch = new CountryModificationDTO()
-            {
-                IdCountry = countryFromStore.IdCountry,
-                NameCountry = countryFromStore.NameCountry,
-                UrlFlagCountry = countryFromStore.UrlFlagCountry
-            };
+            var countryToPatch = _mapper.Map<CountryModificationDTO>(countryEntity);
 
             patchDocument.ApplyTo(countryToPatch, ModelState);
 
@@ -147,14 +140,13 @@ namespace WrestleApplicationAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            countryFromStore.IdCountry = countryToPatch.IdCountry;
-            countryFromStore.NameCountry = countryToPatch.NameCountry;
-            countryFromStore.UrlFlagCountry = countryToPatch.UrlFlagCountry;
+            _mapper.Map(countryToPatch, countryEntity);
+            await _continentRepository.SaveChangesAsync();
 
             return NoContent();
         }
 
-        [HttpDelete("{countryid}")]
+        /*[HttpDelete("{countryid}")]
         public ActionResult DeleteCountry(int continentId, string countryId)
         {
             var continent = _continentsDataStore.Continents.FirstOrDefault(continent => continent.IdContinent == continentId);
