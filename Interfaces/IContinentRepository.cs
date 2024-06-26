@@ -11,6 +11,13 @@ namespace WrestleApplicationAPI.Interfaces
         Task<IEnumerable<Continent>> GetContinentsAsync();
 
         /// <summary>
+        /// Get a continent by filtering
+        /// </summary>
+        /// <param name="nameContinent">Name of continent to filter</param>
+        /// <returns></returns>
+        Task<IEnumerable<Continent>> GetContinentsAsync(string? nameContinent);
+
+        /// <summary>
         /// Get a continent
         /// </summary>
         /// <param name="continentId">Continent ID</param>

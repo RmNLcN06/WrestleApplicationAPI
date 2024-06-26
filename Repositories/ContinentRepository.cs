@@ -20,6 +20,17 @@ namespace WrestleApplicationAPI.Repositories
             return await _context.Continents.OrderBy(continent => continent.NameContinent).ToListAsync();
         }
 
+        public async Task<IEnumerable<Continent>> GetContinentsAsync(string? nameContinent)
+        {
+            if(string.IsNullOrEmpty(nameContinent))
+            {
+                return await GetContinentsAsync();
+            }
+
+            nameContinent = nameContinent.Trim();
+            return await _context.Continents.Where(continent => continent.NameContinent == nameContinent).OrderBy(continent => continent.NameContinent).ToListAsync();
+        }
+
         public async Task<Continent?> GetContinentAsync(int continentId, bool includeCountries)
         {
             if (includeCountries)
