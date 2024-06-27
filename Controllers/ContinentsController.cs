@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using WrestleApplicationAPI.DbContexts;
 using WrestleApplicationAPI.Entities;
 using WrestleApplicationAPI.Interfaces;
@@ -15,6 +16,7 @@ namespace WrestleApplicationAPI.Controllers
     {
         private readonly IContinentRepository _continentRepository;
         private readonly IMapper _mapper;
+        const int maxContinentsPageSize = 20;
 
         public ContinentsController(IContinentRepository continentRepository, IMapper mapper)
         {
@@ -23,9 +25,17 @@ namespace WrestleApplicationAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContinentWithoutCountriesDTO>>> GetContinents(string? nameContinent, string? searchQuery)
+        public async Task<ActionResult<IEnumerable<ContinentWithoutCountriesDTO>>> GetContinents(string? nameContinent, string? searchQuery, int pageNumber = 1, int pageSize = 10)
         {
-            var continentEntities = await _continentRepository.GetContinentsAsync(nameContinent, searchQuery);
+            if (pageSize > maxContinentsPageSize) 
+            { 
+                pageSize = maxContinentsPageSize;
+            }
+
+            var (continentEntities, paginationMetadata) = await _continentRepository.GetContinentsAsync(nameContinent, searchQuery, pageNumber, pageSize);
+
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+
             return Ok(_mapper.Map<IEnumerable<ContinentWithoutCountriesDTO>>(continentEntities));
         }
 

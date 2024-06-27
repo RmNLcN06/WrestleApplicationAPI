@@ -3,6 +3,7 @@ using WrestleApplicationAPI.Interfaces;
 using WrestleApplicationAPI.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
+using WrestleApplicationAPI.Services;
 
 namespace WrestleApplicationAPI.Repositories
 {
@@ -21,13 +22,8 @@ namespace WrestleApplicationAPI.Repositories
             return await _context.Continents.OrderBy(continent => continent.NameContinent).ToListAsync();
         }
 
-        public async Task<IEnumerable<Continent>> GetContinentsAsync(string? nameContinent, string? searchQuery)
+        public async Task<(IEnumerable<Continent>, PaginationMetadata)> GetContinentsAsync(string? nameContinent, string? searchQuery, int pageNumber, int pageSize)
         {
-            if(string.IsNullOrEmpty(nameContinent) && string.IsNullOrWhiteSpace(searchQuery))
-            {
-                return await GetContinentsAsync();
-            }
-
             // Collection to start from
             var collection = _context.Continents as IQueryable<Continent>;
 
@@ -43,7 +39,13 @@ namespace WrestleApplicationAPI.Repositories
                 collection = collection.Where(a => a.NameContinent.Contains(searchQuery));
             }
 
-            return await collection.OrderBy(continent => continent.NameContinent).ToListAsync();
+            var totalItemCount = await collection.CountAsync();
+
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+
+            var collectionToReturn = await collection.OrderBy(continent => continent.NameContinent).Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
         }
 
         public async Task<Continent?> GetContinentAsync(int continentId, bool includeCountries)

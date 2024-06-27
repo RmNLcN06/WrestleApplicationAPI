@@ -1,4 +1,5 @@
 ﻿using WrestleApplicationAPI.Entities;
+using WrestleApplicationAPI.Services;
 
 namespace WrestleApplicationAPI.Interfaces
 {
@@ -15,7 +16,7 @@ namespace WrestleApplicationAPI.Interfaces
         /// </summary>
         /// <param name="nameContinent">Name of continent to filter</param>
         /// <returns></returns>
-        Task<IEnumerable<Continent>> GetContinentsAsync(string? nameContinent, string? searchQuery);
+        Task<(IEnumerable<Continent>, PaginationMetadata)> GetContinentsAsync(string? nameContinent, string? searchQuery, int pageNumber, int pageSize);
 
         /// <summary>
         /// Get a continent
