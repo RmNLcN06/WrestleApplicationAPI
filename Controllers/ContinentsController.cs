@@ -23,9 +23,9 @@ namespace WrestleApplicationAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContinentWithoutCountriesDTO>>> GetContinents(string? nameContinent)
+        public async Task<ActionResult<IEnumerable<ContinentWithoutCountriesDTO>>> GetContinents(string? nameContinent, string? searchQuery)
         {
-            var continentEntities = await _continentRepository.GetContinentsAsync(nameContinent);
+            var continentEntities = await _continentRepository.GetContinentsAsync(nameContinent, searchQuery);
             return Ok(_mapper.Map<IEnumerable<ContinentWithoutCountriesDTO>>(continentEntities));
         }
 

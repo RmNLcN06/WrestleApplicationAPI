@@ -15,7 +15,7 @@ namespace WrestleApplicationAPI.Interfaces
         /// </summary>
         /// <param name="nameContinent">Name of continent to filter</param>
         /// <returns></returns>
-        Task<IEnumerable<Continent>> GetContinentsAsync(string? nameContinent);
+        Task<IEnumerable<Continent>> GetContinentsAsync(string? nameContinent, string? searchQuery);
 
         /// <summary>
         /// Get a continent

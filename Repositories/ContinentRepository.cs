@@ -2,6 +2,7 @@
 using WrestleApplicationAPI.Interfaces;
 using WrestleApplicationAPI.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace WrestleApplicationAPI.Repositories
 {
@@ -20,15 +21,29 @@ namespace WrestleApplicationAPI.Repositories
             return await _context.Continents.OrderBy(continent => continent.NameContinent).ToListAsync();
         }
 
-        public async Task<IEnumerable<Continent>> GetContinentsAsync(string? nameContinent)
+        public async Task<IEnumerable<Continent>> GetContinentsAsync(string? nameContinent, string? searchQuery)
         {
-            if(string.IsNullOrEmpty(nameContinent))
+            if(string.IsNullOrEmpty(nameContinent) && string.IsNullOrWhiteSpace(searchQuery))
             {
                 return await GetContinentsAsync();
             }
 
-            nameContinent = nameContinent.Trim();
-            return await _context.Continents.Where(continent => continent.NameContinent == nameContinent).OrderBy(continent => continent.NameContinent).ToListAsync();
+            // Collection to start from
+            var collection = _context.Continents as IQueryable<Continent>;
+
+            if (!string.IsNullOrWhiteSpace(nameContinent)) 
+            {
+                nameContinent = nameContinent.Trim();
+                collection = collection.Where(continent => continent.NameContinent == nameContinent);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                searchQuery = searchQuery.Trim();
+                collection = collection.Where(a => a.NameContinent.Contains(searchQuery));
+            }
+
+            return await collection.OrderBy(continent => continent.NameContinent).ToListAsync();
         }
 
         public async Task<Continent?> GetContinentAsync(int continentId, bool includeCountries)
