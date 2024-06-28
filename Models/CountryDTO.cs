@@ -13,5 +13,15 @@ namespace WrestleApplicationAPI.Models
 
         public string? UrlFlagCountry { get; set; }
 
+        public int NumberOfCities
+        {
+            get
+            {
+                return Cities.Count;
+            }
+        }
+
+        public ICollection<CityDTO> Cities { get; set; } = new List<CityDTO>();
+
     }
 }
