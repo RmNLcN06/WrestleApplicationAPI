@@ -11,12 +11,18 @@ namespace WrestleApplicationAPI.Interfaces
         /// <returns></returns>
         Task<IEnumerable<Continent>> GetContinentsAsync();
 
+
+
+
         /// <summary>
         /// Get a continent by filtering
         /// </summary>
         /// <param name="nameContinent">Name of continent to filter</param>
         /// <returns></returns>
         Task<(IEnumerable<Continent>, PaginationMetadata)> GetContinentsAsync(string? nameContinent, string? searchQuery, int pageNumber, int pageSize);
+
+
+
 
         /// <summary>
         /// Get a continent
@@ -26,6 +32,9 @@ namespace WrestleApplicationAPI.Interfaces
         /// <returns></returns>
         Task<Continent?> GetContinentAsync(int continentId, bool includeCountries);
 
+
+
+
         /// <summary>
         /// Verify if continent exist
         /// </summary>
@@ -33,12 +42,18 @@ namespace WrestleApplicationAPI.Interfaces
         /// <returns></returns>
         Task<bool> ContinentExistsAsync(int continentId);
 
+
+
+
         /// <summary>
         /// Get a list of countries for a continent
         /// </summary>
         /// <param name="continentId">Continent ID</param>
         /// <returns></returns>
         Task<IEnumerable<Country>> GetCountriesForContinentAsync(int continentId);
+
+
+
 
         /// <summary>
         /// Get a country for a continent
@@ -48,6 +63,9 @@ namespace WrestleApplicationAPI.Interfaces
         /// <returns></returns>
         Task<Country?> GetCountryForContinentAsync(int continentId, int countryId);
 
+
+
+
         /// <summary>
         /// Create country in specific continent
         /// </summary>
@@ -56,11 +74,17 @@ namespace WrestleApplicationAPI.Interfaces
         /// <returns></returns>
         Task AddCountryForContinentAsync(int continentId, Country country);
 
+
+
+
         /// <summary>
         /// Delete country in specific continent
         /// </summary>
         /// <param name="country">Country Entity</param>
         void DeleteCountryForContinent(Country country);
+
+
+
 
         /// <summary>
         /// Save changes for continent ID

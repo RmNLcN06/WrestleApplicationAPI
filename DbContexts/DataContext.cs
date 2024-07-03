@@ -10,6 +10,7 @@ namespace WrestleApplicationAPI.DbContexts
 
         public DbSet<Continent> Continents { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<City> Cities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -17,6 +18,12 @@ namespace WrestleApplicationAPI.DbContexts
                 .HasMany(e => e.Countries)
                 .WithOne(e => e.Continent)
                 .HasForeignKey(e => e.ContinentId)
+                .IsRequired();
+
+            modelBuilder.Entity<Country>()
+                .HasMany(e => e.Cities)
+                .WithOne(e => e.Country)
+                .HasForeignKey(e => e.CountryId)
                 .IsRequired();
 
             modelBuilder.Entity<Continent>()
@@ -142,6 +149,134 @@ namespace WrestleApplicationAPI.DbContexts
                     ShortNameCountry = "ATA",
                     UrlFlagCountry = "https://upload.wikimedia.org/wikipedia/commons/b/bb/Proposed_flag_of_Antarctica_%28Graham_Bartram%29.svg?uselang=fr",
                     ContinentId = 7
+                });
+
+            modelBuilder.Entity<City>()
+                 .HasData(
+                new City("Paris")
+                {
+                    IdCity = 1,
+                    CountryId = 1
+                },
+                new City("Marseille")
+                {
+                    IdCity = 2,
+                    CountryId = 1
+                },
+                new City("Milan")
+                {
+                    IdCity = 3,
+                    CountryId = 2
+                },
+                new City("Rome")
+                {
+                    IdCity = 4,
+                    CountryId = 2
+                },
+                new City("Wuhan")
+                {
+                    IdCity = 5,
+                    CountryId = 3
+                },
+                new City("Jinan")
+                {
+                    IdCity = 6,
+                    CountryId = 3
+                },
+                new City("Tokyo")
+                {
+                    IdCity = 7,
+                    CountryId = 4
+                },
+                new City("Osaka")
+                {
+                    IdCity = 8,
+                    CountryId = 4
+                },
+                new City("Alger")
+                {
+                    IdCity = 9,
+                    CountryId = 5
+                },
+                new City("Annaba")
+                {
+                    IdCity = 10,
+                    CountryId = 5
+                },
+                new City("Tzaneen")
+                {
+                    IdCity = 11,
+                    CountryId = 6
+                },
+                new City("Brits")
+                {
+                    IdCity = 12,
+                    CountryId = 6
+                },
+                new City("Washington")
+                {
+                    IdCity = 13,
+                    CountryId = 7
+                },
+                new City("Los Angeles")
+                {
+                    IdCity = 14,
+                    CountryId = 7
+                },
+                new City("Toronto")
+                {
+                    IdCity = 15,
+                    CountryId = 8
+                },
+                new City("Quebec")
+                {
+                    IdCity = 16,
+                    CountryId = 8
+                },
+                new City("Rio de Janeiro")
+                {
+                    IdCity = 17,
+                    CountryId = 9
+                },
+                new City("Sao Paulo")
+                {
+                    IdCity = 18,
+                    CountryId = 9
+                },
+                new City("Buenos Aires")
+                {
+                    IdCity = 19,
+                    CountryId = 10
+                },
+                new City("Santa Fe")
+                {
+                    IdCity = 20,
+                    CountryId = 10
+                },
+                new City("Sydney")
+                {
+                    IdCity = 21,
+                    CountryId = 11
+                },
+                new City("Darwin")
+                {
+                    IdCity = 22,
+                    CountryId = 11
+                },
+                new City("Wellington")
+                {
+                    IdCity = 23,
+                    CountryId = 12
+                },
+                new City("Auckland")
+                {
+                    IdCity = 24,
+                    CountryId = 12
+                },
+                new City("Antarctica")
+                {
+                    IdCity = 25,
+                    CountryId = 13
                 });
         }
     }
