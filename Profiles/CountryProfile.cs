@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using WrestleApplicationAPI.Models.Country;
 
 namespace WrestleApplicationAPI.Profiles
 {
@@ -6,10 +7,10 @@ namespace WrestleApplicationAPI.Profiles
     {
         public CountryProfile() 
         { 
-            CreateMap<Entities.Country, Models.CountryDTO>();
-            CreateMap<Models.CountryCreationDTO, Entities.Country>();
-            CreateMap<Models.CountryModificationDTO, Entities.Country>();
-            CreateMap<Entities.Country, Models.CountryModificationDTO>();
+            CreateMap<Entities.Country, CountryDTO>();
+            CreateMap<CountryCreationDTO, Entities.Country>();
+            CreateMap<CountryModificationDTO, Entities.Country>();
+            CreateMap<Entities.Country, CountryModificationDTO>();
         }
     }
 }

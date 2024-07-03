@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WrestleApplicationAPI.Models
+namespace WrestleApplicationAPI.Models.Country
 {
     public class CountryModificationDTO
     {

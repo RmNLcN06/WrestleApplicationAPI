@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using WrestleApplicationAPI.DbContexts;
 using WrestleApplicationAPI.Entities;
 using WrestleApplicationAPI.Interfaces;
-using WrestleApplicationAPI.Models;
 using WrestleApplicationAPI.Services;
 using AutoMapper;
+using WrestleApplicationAPI.Models.Country;
 
 namespace WrestleApplicationAPI.Controllers
 {
@@ -78,7 +78,7 @@ namespace WrestleApplicationAPI.Controllers
 
             await _continentRepository.SaveChangesAsync();
 
-            var createdCountryToReturn = _mapper.Map<Models.CountryDTO>(finalCountry);
+            var createdCountryToReturn = _mapper.Map<CountryDTO>(finalCountry);
 
             return CreatedAtRoute("GetCountry",
                 new

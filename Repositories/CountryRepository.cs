@@ -46,39 +46,47 @@ namespace WrestleApplicationAPI.Repositories
             return (collectionToReturn, paginationMetadata);
         }
 
-        public Task AddCityForCountryAsync(int countryId, City city)
+        public async Task AddCityForCountryAsync(int countryId, City city)
         {
-            throw new NotImplementedException();
+            var country = await GetCountryAsync(countryId, false);
+            if (country != null) 
+            { 
+                country.Cities.Add(city);
+            }
         }
 
-        public Task<bool> CountryExistsAsync(int countryId)
+        public async Task<bool> CountryExistsAsync(int countryId)
         {
-            throw new NotImplementedException();
+            return await _context.Countries.AnyAsync(country => country.IdCountry == countryId);
         }
 
         public void DeleteCityForCountry(City city)
         {
-            throw new NotImplementedException();
+            _context.Cities.Remove(city);
         }
 
-        public Task<IEnumerable<City>> GetCitiesForCountryAsync(int countryId)
+        public async Task<IEnumerable<City>> GetCitiesForCountryAsync(int countryId)
         {
-            throw new NotImplementedException();
+            return await _context.Cities.Where(city => city.CountryId == countryId).ToListAsync();
         }
 
-        public Task<City?> GetCityForCountryAsync(int countryId, int cityId)
+        public async Task<City?> GetCityForCountryAsync(int countryId, int cityId)
         {
-            throw new NotImplementedException();
+            return await _context.Cities.Where(city => city.CountryId == countryId && city.IdCity == cityId).FirstOrDefaultAsync();
         }
 
-        public Task<Country?> GetCountryAsync(int countryId, bool includeCities)
+        public async Task<Country?> GetCountryAsync(int countryId, bool includeCities)
         {
-            throw new NotImplementedException();
+            if(includeCities)
+            {
+                return await _context.Countries.Include(country => country.Cities).Where(country => country.IdCountry == countryId).FirstOrDefaultAsync();
+            }
+            return await _context.Countries.Where(country => country.IdCountry == countryId).FirstOrDefaultAsync();
         }
 
-        public Task<bool> SaveChangesAsync()
+        public async Task<bool> SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            return await _context.SaveChangesAsync() >= 0;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace WrestleApplicationAPI.Models
+﻿using WrestleApplicationAPI.Models.Country;
+
+namespace WrestleApplicationAPI.Models.Continent
 {
     public class ContinentDTO
     {

@@ -6,7 +6,7 @@ using System.Text.Json;
 using WrestleApplicationAPI.DbContexts;
 using WrestleApplicationAPI.Entities;
 using WrestleApplicationAPI.Interfaces;
-using WrestleApplicationAPI.Models;
+using WrestleApplicationAPI.Models.Continent;
 
 namespace WrestleApplicationAPI.Controllers
 {

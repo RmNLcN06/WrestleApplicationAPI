@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WrestleApplicationAPI.Models.City;
 
-namespace WrestleApplicationAPI.Models
+namespace WrestleApplicationAPI.Models.Country
 {
     public class CountryDTO
     {
