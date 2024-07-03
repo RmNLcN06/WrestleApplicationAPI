@@ -26,6 +26,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 );
 
 builder.Services.AddScoped<IContinentRepository, ContinentRepository>();
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
