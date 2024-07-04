@@ -19,5 +19,7 @@ namespace WrestleApplicationAPI.Entities
         [ForeignKey("CountryId")]
         public int CountryId { get; set; }
         public Country? Country { get; set; }
+
+        public ICollection<Arena> Arenas { get; set; } = new List<Arena>();
     }
 }
