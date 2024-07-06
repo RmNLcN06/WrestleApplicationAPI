@@ -13,6 +13,8 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/continentinfo.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
+var MyAllowSpecificOrigins = "_WrestleApplication";
+
 var builder = WebApplication.CreateBuilder(args);
 //builder.Logging.ClearProviders();
 //builder.Logging.AddConsole();
@@ -49,6 +51,18 @@ builder.Services.AddTransient<IMailService, LocalMailService>();
 builder.Services.AddTransient<IMailService, CloudMailService>();
 #endif
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+            .AllowAnyMethod().
+            AllowAnyHeader();
+            //.AllowAnyOrigin();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -64,6 +78,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
