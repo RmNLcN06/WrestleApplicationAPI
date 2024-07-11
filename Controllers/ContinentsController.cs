@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Metrics;
 using System.Text.Json;
 using WrestleApplicationAPI.DbContexts;
 using WrestleApplicationAPI.Entities;
 using WrestleApplicationAPI.Interfaces;
 using WrestleApplicationAPI.Models.Continent;
+using WrestleApplicationAPI.Models.Country;
 
 namespace WrestleApplicationAPI.Controllers
 {
@@ -39,7 +41,7 @@ namespace WrestleApplicationAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<ContinentWithoutCountriesDTO>>(continentEntities));
         }
 
-        [HttpGet("{continentId}")]
+        [HttpGet("{continentId}", Name = "GetContinent")]
         public async Task<IActionResult> GetContinent(int continentId, bool includeCountries = false)
         {
             var continent = await _continentRepository.GetContinentAsync(continentId, includeCountries);
@@ -55,6 +57,25 @@ namespace WrestleApplicationAPI.Controllers
             }
            
             return Ok(_mapper.Map<ContinentWithoutCountriesDTO>(continent));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ContinentCreationDTO>> AddContinent(Continent continent)
+        {
+            var finalContinent = _mapper.Map<Entities.Continent>(continent);
+
+            await _continentRepository.AddContinentAsync(finalContinent);
+
+            await _continentRepository.SaveChangesAsync();
+
+            var createdContinentToReturn = _mapper.Map<ContinentDTO>(finalContinent);
+
+            return CreatedAtRoute("GetContinent",
+                new
+                {
+                    continentId = createdContinentToReturn.IdContinent,
+                },
+                createdContinentToReturn);
         }
     }
 }

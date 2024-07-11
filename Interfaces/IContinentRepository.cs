@@ -36,6 +36,16 @@ namespace WrestleApplicationAPI.Interfaces
 
 
         /// <summary>
+        /// Create continent
+        /// </summary>
+        /// <param name="continent">Continent Entity</param>
+        /// <returns></returns>
+        Task<Continent> AddContinentAsync(Continent continent);
+
+
+
+
+        /// <summary>
         /// Verify if continent exist
         /// </summary>
         /// <param name="continentId">Continent ID</param>

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using WrestleApplicationAPI.Models.Continent;
+using WrestleApplicationAPI.Models.Country;
 
 namespace WrestleApplicationAPI.Profiles
 {
@@ -9,6 +10,7 @@ namespace WrestleApplicationAPI.Profiles
         { 
             CreateMap<Entities.Continent, ContinentWithoutCountriesDTO>();
             CreateMap<Entities.Continent, ContinentDTO>();
+            CreateMap<ContinentCreationDTO, Entities.Continent>();
         }
     }
 }

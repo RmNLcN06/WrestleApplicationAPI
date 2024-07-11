@@ -57,6 +57,13 @@ namespace WrestleApplicationAPI.Repositories
             return await _context.Continents.Where(continent => continent.IdContinent == continentId).FirstOrDefaultAsync();
         }
 
+        public async Task<Continent> AddContinentAsync(Continent continent)
+        {
+            _context.Continents.Add(continent);
+            await _context.SaveChangesAsync();
+            return continent;
+        }
+
         public async Task<bool> ContinentExistsAsync(int continentId)
         {
             return await _context.Continents.AnyAsync(continent => continent.IdContinent == continentId);
