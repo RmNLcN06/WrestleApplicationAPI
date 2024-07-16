@@ -11,6 +11,8 @@ namespace WrestleApplicationAPI.Profiles
             CreateMap<Entities.Continent, ContinentWithoutCountriesDTO>();
             CreateMap<Entities.Continent, ContinentDTO>();
             CreateMap<ContinentCreationDTO, Entities.Continent>();
+            CreateMap<ContinentModificationDTO, Entities.Continent>();
+            CreateMap<Entities.Continent, ContinentModificationDTO>();
         }
     }
 }

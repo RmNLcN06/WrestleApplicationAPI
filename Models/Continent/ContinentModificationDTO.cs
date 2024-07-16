@@ -2,7 +2,7 @@
 
 namespace WrestleApplicationAPI.Models.Continent
 {
-    public class ContinentCreationDTO
+    public class ContinentModificationDTO
     {
         [Required(ErrorMessage = "You should provide a Name value.")]
         [MaxLength(15)]

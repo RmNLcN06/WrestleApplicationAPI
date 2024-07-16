@@ -62,6 +62,11 @@ namespace WrestleApplicationAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ContinentCreationDTO>> AddContinent(Continent continent)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var finalContinent = _mapper.Map<Entities.Continent>(continent);
 
             await _continentRepository.AddContinentAsync(finalContinent);
@@ -76,6 +81,28 @@ namespace WrestleApplicationAPI.Controllers
                     continentId = createdContinentToReturn.IdContinent,
                 },
                 createdContinentToReturn);
+        }
+
+        [HttpPut("{continentId}")]
+        public async Task<ActionResult> ModificationContinent(int continentId, ContinentModificationDTO continent, bool includeCountries = false)
+        {
+            if (!await _continentRepository.ContinentExistsAsync(continentId))
+            {
+                return NotFound("Continent not find");
+            }
+
+            var continentEntity = await _continentRepository.GetContinentAsync(continentId, includeCountries);
+
+            if (continentEntity == null)
+            {
+                return NotFound("Continent not find");
+            }
+
+            _mapper.Map(continent, continentEntity);
+
+            await _continentRepository.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
